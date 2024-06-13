@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteContact } from '../../redux/contactsOps';
 import { HiUser, HiPhone } from 'react-icons/hi';
