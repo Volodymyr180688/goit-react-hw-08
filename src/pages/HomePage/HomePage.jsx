@@ -4,7 +4,7 @@ export default function HomePage() {
     return (
             <div className={style.container}>
         <h1 className={style.title}>
-          Contacts welcome page{' '}
+          Welcome to the Contact Book{' '}
           <span role="img" aria-label="Greeting icon">
             💁‍♀️
           </span>

@@ -4,4 +4,17 @@
   align-items: center;
   margin-bottom: 16px;
   border-bottom: 1px solid #2a363b;
+  background-color: rgb(235, 220, 9);
+}
+.logo {
+  display: flex;
+  color: rgb(8, 23, 238);
+}
+.logo p {
+  font-size: 24px;
+  font-weight: 700;
+}
+.icon {
+  width: 30px;
+  height: 30px;
 }
