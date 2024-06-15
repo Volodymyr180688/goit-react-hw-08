@@ -1,83 +1,89 @@
-import { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { addContact } from "../../redux/contactsOps";
-import { selectContacts } from "../../redux/contacts/slice";
+import { Field, Form, Formik, ErrorMessage } from "formik";
+import { useId } from "react";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contacts/operations";
+import toast from "react-hot-toast";
+import { FeedbackSchema, formatPhoneNumber } from "../../validation";
+import { handleKeyPress } from "../../handleKeyPress";
+
 import style from "./ContactForm.module.css";
 
+
 const ContactForm = () => {
+  const nameFieldId = useId();
+  const phoneFieldId = useId();
+
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
-
-  const [formattedNumber, setFormattedNumber] = useState("");
-
-  const initialValues = {
-    name: "",
-    number: "",
-  };
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Required").min(3, "Too Short!").max(50, "Too Long!"),
-    number: Yup.string()
-      .required("Required")
-      .min(3, "Too Short!")
-      .max(50, "Too Long!")
-      .matches(/^\d{0,3}-?\d{0,2}-?\d{0,2}$/, "Invalid phone number format"),
-  });
-
-  const formatPhoneNumber = (value) => {
-    const phoneNumber = value.replace(/[^\d]/g, "");
-    const match = phoneNumber.match(/^(\d{0,3})(\d{0,2})(\d{0,2})$/);
-    if (match) {
-      return match.slice(1).filter(Boolean).join("-");
-    }
-    return "";
-  };
-
-  const handleChange = (event, formikProps) => {
-    const { value } = event.target;
-    const formatted = formatPhoneNumber(value);
-    setFormattedNumber(formatted);
-    formikProps.setFieldValue("number", formatted);
-  };
-
-  const handleSubmit = (values, { resetForm }) => {
-    const isDuplicate = contacts.some(
-      (contact) => contact.name === values.name && contact.number === values.number
-    );
-
-    if (isDuplicate) {
-      alert("This contact already exists.");
-    } else {
-      dispatch(addContact(values));
-      resetForm();
-      setFormattedNumber("");
-    }
-  };
 
   return (
     <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      initialValues={{ username: "", number: "" }}
+      validationSchema={FeedbackSchema}
+      onSubmit={(values, actions) => {
+        const newContact = {
+          name: values.username,
+          number: values.number,
+        };
+        dispatch(addContact(newContact))
+          .unwrap()
+          .then(() => {
+            toast.success("Successfully add!", { position: "top-center" });
+          })
+          .catch(() => {
+            toast.error("Error, input correct data", {
+              position: "top-center",
+            });
+          });
+        actions.resetForm();
+      }}
     >
-      {(formikProps) => (
-        <Form className={style.container}>
-          <label htmlFor="name">Name</label>
-          <Field type="text" name="name" />
-          <ErrorMessage className={style.error} name="name" component="span" />
-          <label htmlFor="number">Number</label>
+      {({ setFieldValue, values }) => (
+      <Form className={style.formContainer}>
+        <label htmlFor={nameFieldId} className={style.label}>
+          Username
+        </label>
+        <div className={style.wrap}>
           <Field
             type="text"
-            name="number"
-            value={formattedNumber}
-            onChange={(e) => handleChange(e, formikProps)}
+            name="username"
+            id={nameFieldId}
+            className={style.inputField}
           />
-          <ErrorMessage className={style.error} name="number" component="span" />
-          <button className={style.button} type="submit">Add Contact</button>
+          <ErrorMessage
+            name="username"
+            component="span"
+            className={style.errorMessage}
+          />
+        </div>
+
+        <label htmlFor={phoneFieldId} className={style.label}>
+          Phone
+        </label>
+        <div className={style.wrap}>
+          <Field
+            type="text"
+            onKeyPress={handleKeyPress}
+            name="number"
+            id={phoneFieldId}
+              className={style.inputField}
+              onChange={(e) => {
+                const formattedPhoneNumber = formatPhoneNumber(e.target.value);
+                setFieldValue("number", formattedPhoneNumber);
+              }}
+              value={values.number}
+          />
+          <ErrorMessage
+            name="number"
+            component="span"
+            className={style.errorMessage}
+          />
+        </div>
+
+        <button type="submit" className={style.submitButton}>
+          Add contact
+        </button>
         </Form>
-      )}
+        )}
     </Formik>
   );
 };

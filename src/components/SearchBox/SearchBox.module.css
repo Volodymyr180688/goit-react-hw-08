@@ -1,15 +1,18 @@
 .container {
-  display: flex;
-  flex-direction: column;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
 }
-.container input {
-  width: 400px;
+
+.input {
+  width: 100%;
   padding: 10px;
-  border-radius: 5px;
-  border: 1px solid black;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
-.container input:hover,
-.container input:focus {
-  border-color: blue;
-  background-color: lightgray;
+
+.title {
+  margin-bottom: 10px;
+  color: #333;
 }

@@ -2,11 +2,22 @@
   display: inline-block;
   text-decoration: none;
   padding: 12px;
+  color: #85c9e6;
   font-weight: 700;
-  color: rgb(8, 23, 238);
+  font-size: 12px;
 }
 
+.link:hover,
+.link:focus {
+  color: #1c31ee;
+}
 .link.active {
-  color: #91071a;
+  color: #f37d0e;
   text-decoration: underline;
+}
+
+@media screen and (min-width: 656px) {
+  .link {
+    font-size: 20px;
+  }
 }

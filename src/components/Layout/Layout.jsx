@@ -1,15 +1,21 @@
-import { Suspense } from 'react';
-import { AppBar } from '../AppBar/AppBar';
-import style from './Layout.module.css';
+import AppBar from "../AppBar/AppBar";
 
+import { Suspense } from "react";
+import { Outlet } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
-export const Layout = ({ children }) => {
+import style from "./Layout.module.css";
+
+const Layout = () => {
   return (
     <div className={style.container}>
       <AppBar />
-      <Suspense fallback={<div>Loading...</div>}>
-        {children}
+      <Suspense fallback={null}>
+        <Outlet />
       </Suspense>
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 };
+
+export default Layout;
