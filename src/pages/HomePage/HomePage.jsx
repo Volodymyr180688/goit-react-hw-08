@@ -4,7 +4,8 @@ export default function Home() {
   return (
     <div className={style.container}>
       <h1 className={style.title}>
-        Contact Book welcome page{" "}
+        <span role="img" aria-label="Greeting icon">📒</span>
+       Contact Book welcome page{" "}
         <span role="img" aria-label="Greeting icon">
           💁‍♀️
         </span>
